@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Food Menu</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f5f7fa;
+}
+
+/* Navbar */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#111;
+color:white;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#00ff9c;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+}
+
+.nav-links a:hover{
+color:#00ff9c;
+}
+
+/* Container */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px;
+}
+
+/* Search */
+
+.search{
+margin-bottom:30px;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+/* Food grid */
+
+.food-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,.1);
+overflow:hidden;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.card-content{
+padding:15px;
+}
+
+.price{
+color:#00aa66;
+font-weight:bold;
+margin-top:5px;
+}
+
+.btn{
+display:inline-block;
+margin-top:10px;
+padding:8px 14px;
+background:#00aa66;
+color:white;
+text-decoration:none;
+border-radius:6px;
+font-size:14px;
+}
+
+.btn:hover{
+background:#008f55;
+}
+
+/* Footer */
+
+.footer{
+margin-top:40px;
+padding:20px;
+background:#111;
+color:white;
+text-align:center;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.navbar{
+flex-direction:column;
+}
+
+.nav-links{
+margin-top:10px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<div class="navbar">
+
+<div class="logo">
+HMFD
+</div>
+
+<div class="nav-links">
+<a href="/dashboard/">Dashboard</a>
+<a href="/foods/">Menu</a>
+<a href="/my-orders/">My Orders</a>
+<a href="/logout/">Logout</a>
+</div>
+
+</div>
+
+<div class="container">
+
+<h2>Food Menu</h2>
+
+<div class="search">
+
+<input type="text" id="searchFood" placeholder="Search food...">
+
+</div>
+
+<div class="food-grid" id="foodGrid">
+
+{% for food in foods %}
+
+<div class="card">
+
+<img src="{{ food.image.url }}">
+
+<div class="card-content">
+
+<h3>{{ food.name }}</h3>
+
+<p>{{ food.description|truncatechars:60 }}</p>
+
+<div class="price">
+₹ {{ food.price }}
+</div>
+
+<a href="/order/{{ food.id }}/" class="btn">
+Order Now
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+<div class="footer">
+
+Home Maker Food Delivery © 2026
+
+</div>
+
+<script>
+
+/* Search function */
+
+const searchInput=document.getElementById("searchFood");
+
+searchInput.addEventListener("keyup",function(){
+
+let filter=searchInput.value.toLowerCase();
+
+let cards=document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+
+let title=card.querySelector("h3").innerText.toLowerCase();
+
+if(title.includes(filter))
+{
+card.style.display="block";
+}
+else
+{
+card.style.display="none";
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>

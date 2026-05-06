@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Place Order</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.box{
+background:white;
+padding:30px;
+border-radius:10px;
+width:350px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+button{
+padding:10px;
+width:100%;
+background:#00aa66;
+border:none;
+color:white;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Order {{ food.name }}</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<input type="number" name="quantity" placeholder="Quantity" required>
+
+<button type="submit">Place Order</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

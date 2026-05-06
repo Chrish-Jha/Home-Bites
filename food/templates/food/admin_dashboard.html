@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Admin Dashboard</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f5f7fa;
+}
+
+/* Navbar */
+
+.navbar{
+background:#111;
+color:white;
+padding:15px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.logo{
+color:#00ff9c;
+font-weight:bold;
+font-size:22px;
+text-decoration:none;
+}
+
+/* Layout */
+
+.dashboard{
+display:grid;
+grid-template-columns:220px 1fr;
+min-height:100vh;
+}
+
+/* Sidebar */
+
+.sidebar{
+background:#1a1a1a;
+color:white;
+padding:20px;
+}
+
+.sidebar h3{
+margin-bottom:20px;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+color:white;
+text-decoration:none;
+margin-bottom:10px;
+border-radius:6px;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:#00aa66;
+}
+
+/* Main */
+
+.main{
+padding:30px;
+}
+
+/* Stats */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.stat-box{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,.1);
+text-align:center;
+transition:.3s;
+}
+
+.stat-box:hover{
+transform:translateY(-4px);
+}
+
+.stat-box h2{
+color:#00aa66;
+margin-top:5px;
+}
+
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+
+th,td{
+padding:14px;
+border-bottom:1px solid #eee;
+text-align:left;
+}
+
+th{
+background:#111;
+color:white;
+}
+
+tr:hover{
+background:#f2f2f2;
+}
+
+/* Status */
+
+.status{
+padding:4px 10px;
+border-radius:5px;
+font-size:12px;
+color:white;
+}
+
+.pending{
+background:#ff9800;
+}
+
+.accepted{
+background:#2196f3;
+}
+
+.delivered{
+background:#4caf50;
+}
+
+/* Buttons */
+
+.btn{
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+margin-right:5px;
+}
+
+.approve{
+background:#00aa66;
+color:white;
+}
+
+.deliver{
+background:#0077ff;
+color:white;
+}
+
+.btn:hover{
+opacity:0.9;
+}
+
+/* Quick buttons */
+
+.quick{
+margin-bottom:25px;
+}
+
+.quick a{
+padding:10px 15px;
+background:#111;
+color:white;
+text-decoration:none;
+border-radius:6px;
+margin-right:10px;
+}
+
+.quick a:hover{
+background:#00aa66;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<div class="navbar">
+
+<a href="/admin-dashboard/" class="logo">
+HMFD Admin
+</a>
+
+<div>
+<a href="/admin-dashboard/" style="color:white;margin-right:15px;">Dashboard</a>
+<a href="/logout/" style="color:white;text-decoration:none;">Logout</a>
+</div>
+
+</div>
+
+<div class="dashboard">
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h3>Admin Menu</h3>
+
+<a href="/admin-dashboard/">📊 Dashboard</a>
+<a href="/add-food/">🍔 Add Food</a>
+<a href="/admin-foods/">📋 Manage Foods</a>
+<a href="/admin-orders/">📦 Orders</a>
+
+</div>
+
+<!-- Main -->
+
+<div class="main">
+
+<h1>Admin Dashboard</h1>
+
+<br>
+
+<!-- Quick Links -->
+
+<div class="quick">
+
+<a href="/add-food/">Add Food</a>
+<a href="/admin-orders/">Manage Orders</a>
+
+</div>
+
+<!-- Stats -->
+
+<div class="stats">
+
+<div class="stat-box">
+<p>Total Users</p>
+<h2>{{ users|length }}</h2>
+</div>
+
+<div class="stat-box">
+<p>Total Foods</p>
+<h2>{{ foods|length }}</h2>
+</div>
+
+<div class="stat-box">
+<p>Total Orders</p>
+<h2>{{ orders|length }}</h2>
+</div>
+
+<div class="stat-box">
+<p>Pending Orders</p>
+<h2>{{ pending_orders|length }}</h2>
+</div>
+
+</div>
+
+<h2>Recent Order Requests</h2>
+
+<br>
+
+<table>
+
+<tr>
+<th>User</th>
+<th>Food</th>
+<th>Quantity</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for order in orders %}
+
+<tr>
+
+<td>{{ order.user.name }}</td>
+
+<td>{{ order.food.name }}</td>
+
+<td>{{ order.quantity }}</td>
+
+<td>
+
+<span class="status
+{% if order.status == 'Pending' %}pending{% endif %}
+{% if order.status == 'Accepted' %}accepted{% endif %}
+{% if order.status == 'Delivered' %}delivered{% endif %}
+">
+
+{{ order.status }}
+
+</span>
+
+</td>
+
+<td>
+
+<a href="/approve-order/{{ order.id }}/">
+<button class="btn approve">Approve</button>
+</a>
+
+<a href="/deliver-order/{{ order.id }}/">
+<button class="btn deliver">Deliver</button>
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

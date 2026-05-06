@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Home Maker Food Delivery</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f5f7fa;
+line-height:1.6;
+}
+
+/* Navbar */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#111;
+color:white;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#00ff9c;
+}
+
+.nav-links a{
+margin-left:20px;
+text-decoration:none;
+color:white;
+transition:.3s;
+}
+
+.nav-links a:hover{
+color:#00ff9c;
+}
+
+/* Hero */
+
+.hero{
+height:420px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:linear-gradient(120deg,#00ff9c,#0099ff);
+color:white;
+padding:20px;
+}
+
+.hero h1{
+font-size:42px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+max-width:600px;
+}
+
+.hero-btn{
+margin-top:20px;
+}
+
+.hero-btn a{
+padding:10px 18px;
+background:white;
+color:#111;
+text-decoration:none;
+border-radius:6px;
+margin:5px;
+font-weight:bold;
+}
+
+/* Sections */
+
+.section{
+max-width:1200px;
+margin:auto;
+padding:60px 20px;
+}
+
+.section-title{
+text-align:center;
+font-size:30px;
+margin-bottom:20px;
+}
+
+.section-desc{
+text-align:center;
+max-width:700px;
+margin:auto;
+margin-bottom:40px;
+color:#555;
+}
+
+/* Cards */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+text-align:center;
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+/* Stats */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+margin-top:40px;
+}
+
+.stat-box{
+background:#111;
+color:white;
+padding:30px;
+border-radius:10px;
+text-align:center;
+}
+
+.stat-box h2{
+color:#00ff9c;
+font-size:32px;
+}
+
+/* Food section */
+
+.food-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+}
+
+.food-card{
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
+transition:.3s;
+}
+
+.food-card:hover{
+transform:translateY(-5px);
+}
+
+.food-card img{
+width:100%;
+height:180px;
+object-fit:cover;
+}
+
+.food-content{
+padding:15px;
+}
+
+.price{
+color:#00aa66;
+font-weight:bold;
+}
+
+.order-btn{
+display:inline-block;
+padding:8px 14px;
+background:#00aa66;
+color:white;
+text-decoration:none;
+border-radius:6px;
+margin-top:10px;
+}
+
+/* Cities */
+
+.city-list{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+margin-top:20px;
+}
+
+.city{
+background:#00aa66;
+color:white;
+padding:8px 15px;
+border-radius:20px;
+font-size:14px;
+}
+
+/* CTA */
+
+.cta{
+background:linear-gradient(120deg,#00ff9c,#0099ff);
+color:white;
+text-align:center;
+padding:60px 20px;
+}
+
+.cta h2{
+margin-bottom:10px;
+}
+
+.cta a{
+margin-top:15px;
+display:inline-block;
+padding:10px 20px;
+background:white;
+color:black;
+text-decoration:none;
+border-radius:6px;
+font-weight:bold;
+}
+
+/* Footer */
+
+.footer{
+background:#111;
+color:white;
+padding:30px;
+text-align:center;
+margin-top:40px;
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:28px;
+}
+
+.navbar{
+flex-direction:column;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<div class="navbar">
+
+<div class="logo">HMFD</div>
+
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/foods/">Menu</a>
+<a href="/login/">Login</a>
+<a href="/register/">Register</a>
+</div>
+
+</div>
+
+
+<!-- Hero -->
+
+<div class="hero">
+
+<h1>HomeBites:A Smart Food Delivery Platform for Home Makers</h1>
+
+<p>
+Connecting talented home-maker women with food lovers across multiple cities. 
+Support women entrepreneurship and enjoy authentic homemade meals.
+</p>
+
+<div class="hero-btn">
+<a href="/foods/">Explore Foods</a>
+<a href="/register/">Join as Home Maker</a>
+</div>
+
+</div>
+
+
+<!-- Mission -->
+
+<div class="section">
+
+<h2 class="section-title">Our Mission</h2>
+
+<p class="section-desc">
+Home Maker Food Delivery is a platform created to empower women by helping them earn from their cooking skills. 
+We connect home chefs from different cities with customers who love healthy homemade food.
+</p>
+
+<div class="stats">
+
+<div class="stat-box">
+<h2>500+</h2>
+<p>Women Home Chefs</p>
+</div>
+
+<div class="stat-box">
+<h2>10+</h2>
+<p>Cities Connected</p>
+</div>
+
+<div class="stat-box">
+<h2>2000+</h2>
+<p>Daily Orders</p>
+</div>
+
+<div class="stat-box">
+<h2>15000+</h2>
+<p>Happy Customers</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- How it works -->
+
+<div class="section">
+
+<h2 class="section-title">How It Works</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Women Register</h3>
+<p>Home makers create profiles and upload their homemade food menu.</p>
+</div>
+
+<div class="card">
+<h3>Customers Browse</h3>
+<p>Customers explore delicious foods prepared by women chefs.</p>
+</div>
+
+<div class="card">
+<h3>Place Order</h3>
+<p>Select food items and place orders easily through our platform.</p>
+</div>
+
+<div class="card">
+<h3>Enjoy Homemade Food</h3>
+<p>Fresh homemade meals delivered with love and care.</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Popular Foods -->
+
+<div class="section">
+
+<h2 class="section-title">Popular Foods</h2>
+
+<div class="food-grid">
+
+{% for food in foods %}
+
+<div class="food-card">
+
+<img src="{{ food.image.url }}">
+
+<div class="food-content">
+
+<h3>{{ food.name }}</h3>
+
+<p>{{ food.description|truncatechars:60 }}</p>
+
+<div class="price">
+₹ {{ food.price }}
+</div>
+
+<a href="/food/{{ food.id }}/" class="order-btn">
+View Details
+</a>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<!-- Cities -->
+
+<div class="section">
+
+<h2 class="section-title">Serving Multiple Cities</h2>
+
+<p class="section-desc">
+Our platform connects home chefs and customers across many cities.
+</p>
+
+<div class="city-list">
+
+<div class="city">Mumbai</div>
+<div class="city">Delhi</div>
+<div class="city">Ahmedabad</div>
+<div class="city">Vadodara</div>
+<div class="city">Surat</div>
+<div class="city">Pune</div>
+<div class="city">Hyderabad</div>
+<div class="city">Bangalore</div>
+
+</div>
+
+</div>
+
+
+<!-- CTA -->
+
+<div class="cta">
+
+<h2>Are you a home maker who loves cooking?</h2>
+
+<p>Start earning from your cooking skills today.</p>
+
+<a href="/register/">Become a Home Chef</a>
+
+</div>
+
+
+<!-- Footer -->
+
+<div class="footer">
+
+<p>© 2026 Home Maker Food Delivery | Empowering Women Entrepreneurs</p>
+
+</div>
+
+<script>
+
+/* simple fade animation */
+
+window.addEventListener("scroll",function(){
+
+document.querySelectorAll(".card,.food-card").forEach(el=>{
+
+let pos=el.getBoundingClientRect().top;
+
+if(pos < window.innerHeight-50){
+el.style.opacity=1;
+el.style.transform="translateY(0)";
+}
+
+})
+
+})
+
+</script>
+
+</body>
+</html>

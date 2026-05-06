@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Manage Foods</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fa;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:30px;
+}
+
+/* Top Navigation */
+
+.top-nav{
+margin-bottom:20px;
+}
+
+.btn{
+display:inline-block;
+padding:10px 16px;
+border-radius:6px;
+text-decoration:none;
+color:white;
+margin-right:10px;
+}
+
+.dashboard{
+background:#111;
+}
+
+.dashboard:hover{
+background:#00aa66;
+}
+
+.add{
+background:#00aa66;
+}
+
+.add:hover{
+background:#008f55;
+}
+
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+box-shadow:0 4px 10px rgba(0,0,0,.1);
+border-radius:10px;
+overflow:hidden;
+}
+
+th,td{
+padding:14px;
+border-bottom:1px solid #eee;
+text-align:left;
+}
+
+th{
+background:#111;
+color:white;
+}
+
+tr:hover{
+background:#f1f1f1;
+}
+
+/* Image */
+
+img{
+width:80px;
+border-radius:6px;
+}
+
+/* Delete Button */
+
+.delete{
+background:#e53935;
+padding:6px 12px;
+border:none;
+border-radius:5px;
+color:white;
+cursor:pointer;
+}
+
+.delete:hover{
+background:#c62828;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Manage Food Items</h2>
+
+<!-- Top Navigation Buttons -->
+
+<div class="top-nav">
+
+<a href="/admin-dashboard/" class="btn dashboard">
+⬅ Back to Dashboard
+</a>
+
+<a href="/add-food/" class="btn add">
+➕ Add New Food
+</a>
+
+</div>
+
+<table>
+
+<tr>
+<th>Image</th>
+<th>Food Name</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+
+{% for food in foods %}
+
+<tr>
+
+<td>
+<img src="{{ food.image.url }}">
+</td>
+
+<td>{{ food.name }}</td>
+
+<td>₹ {{ food.price }}</td>
+
+<td>
+
+<a href="/delete-food/{{ food.id }}/">
+<button class="delete">
+Delete
+</button>
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>All Orders</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f5f7fa;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+th,td{
+padding:14px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#111;
+color:white;
+}
+
+tr:hover{
+background:#f1f1f1;
+}
+
+.status{
+padding:5px 10px;
+border-radius:5px;
+color:white;
+font-size:12px;
+}
+
+.pending{background:#ff9800;}
+.accepted{background:#2196f3;}
+.delivered{background:#4caf50;}
+
+.btn{
+padding:6px 10px;
+border:none;
+border-radius:4px;
+color:white;
+cursor:pointer;
+}
+
+.approve{background:#00aa66;}
+.deliver{background:#0077ff;}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>All User Orders</h2>
+
+<table>
+
+<tr>
+
+<th>User</th>
+<th>Food</th>
+<th>Quantity</th>
+<th>Total</th>
+<th>Status</th>
+<th>Action</th>
+
+</tr>
+
+{% for order in orders %}
+
+<tr>
+
+<td>{{ order.user.name }}</td>
+
+<td>{{ order.food.name }}</td>
+
+<td>{{ order.quantity }}</td>
+
+<td>₹ {{ order.total_price }}</td>
+
+<td>
+
+<span class="status 
+{% if order.status == 'Pending' %}pending{% endif %}
+{% if order.status == 'Accepted' %}accepted{% endif %}
+{% if order.status == 'Delivered' %}delivered{% endif %}
+">
+
+{{ order.status }}
+
+</span>
+
+</td>
+
+<td>
+
+<a href="/approve-order/{{ order.id }}/">
+<button class="btn approve">Approve</button>
+</a>
+
+<a href="/deliver-order/{{ order.id }}/">
+<button class="btn deliver">Delivered</button>
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>
