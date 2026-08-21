@@ -1,0 +1,420 @@
+[
+{
+  "model": "food.user",
+  "pk": 1,
+  "fields": {
+    "name": "Krishna Jha",
+    "mobile_number": "9876543210",
+    "email": "krishna@gmail.com",
+    "password": "123456",
+    "is_staff": false,
+    "created_at": "2026-03-15T17:52:54.853Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 2,
+  "fields": {
+    "name": "Krishna",
+    "mobile_number": "9876543210",
+    "email": "krishna1@gmail.com",
+    "password": "123456",
+    "is_staff": false,
+    "created_at": "2026-03-15T18:57:59.383Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 3,
+  "fields": {
+    "name": "Chand",
+    "mobile_number": "9876543211",
+    "email": "chand@gmail.com",
+    "password": "123456",
+    "is_staff": true,
+    "created_at": "2026-03-15T18:59:02.329Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 4,
+  "fields": {
+    "name": "Afiya Naaz",
+    "mobile_number": "9876543210",
+    "email": "afiya@gmail.com",
+    "password": "123456",
+    "is_staff": false,
+    "created_at": "2026-03-16T00:53:41.648Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 5,
+  "fields": {
+    "name": "Khushi Jha",
+    "mobile_number": "9876543210",
+    "email": "khushi@gmail.com",
+    "password": "123456",
+    "is_staff": false,
+    "created_at": "2026-03-16T00:57:25.590Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 6,
+  "fields": {
+    "name": "Md Chand",
+    "mobile_number": "9876543210",
+    "email": "chand1@gmail.com",
+    "password": "123456",
+    "is_staff": false,
+    "created_at": "2026-03-16T04:41:02.452Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 7,
+  "fields": {
+    "name": "Krishna Kumar Jha",
+    "mobile_number": "93217999753",
+    "email": "bk9321799753@gmail.com",
+    "password": "abc@12345",
+    "is_staff": true,
+    "created_at": "2026-03-16T06:33:04.803Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 8,
+  "fields": {
+    "name": "tejashree",
+    "mobile_number": "9807834381",
+    "email": "tkj@gmail.com",
+    "password": "abc12345",
+    "is_staff": false,
+    "created_at": "2026-03-16T07:37:08.856Z"
+  }
+},
+{
+  "model": "food.user",
+  "pk": 9,
+  "fields": {
+    "name": "Jibchh narayan",
+    "mobile_number": "8084385563",
+    "email": "as7050481202@gmail.com",
+    "password": "12345abc",
+    "is_staff": false,
+    "created_at": "2026-03-25T17:48:47.877Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 1,
+  "fields": {
+    "name": "Biryani",
+    "description": "Veg Hyderabadi Biryani [2 Kg]",
+    "price": "1199.00",
+    "image": "food_images/B1.jpeg",
+    "created_at": "2026-03-15T18:02:47.938Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 2,
+  "fields": {
+    "name": "Chicken Hyderabadi Biryani [2 Kg]",
+    "description": "[Serves 5-6] [12 pcs] Fresh Chicken are marinated in a mixture of freshly ground BBK spices & layered with long grain",
+    "price": "1499.00",
+    "image": "food_images/B2.jpg",
+    "created_at": "2026-03-15T18:04:19.566Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 3,
+  "fields": {
+    "name": "Paneer Tikka",
+    "description": "Paired with mint chutney, this appetizer is a crowd-pleaser at any gathering. Enjoy it as a starter, and let the aromatic spices transport you to India’s colorful bazaars.",
+    "price": "150.00",
+    "image": "food_images/B3.jpg",
+    "created_at": "2026-03-16T05:01:31.965Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 4,
+  "fields": {
+    "name": "Daal Makhani ",
+    "description": "Dal Makhani is a staple from Punjab. The creamy texture of this lentil dish is achieved by slow-cooking black lentils and kidney beans with butter and cream.",
+    "price": "120.00",
+    "image": "food_images/B4.jpg",
+    "created_at": "2026-03-16T05:03:25.215Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 5,
+  "fields": {
+    "name": "Chhole Bhature",
+    "description": "Chole Bhature is a North Indian classic that I first tasted in the bustling streets of Amritsar. This hearty combination of spicy chickpeas and fluffy, deep-fried bread is soul-satisfying.",
+    "price": "60.00",
+    "image": "food_images/B5.jpg",
+    "created_at": "2026-03-16T05:04:06.395Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 6,
+  "fields": {
+    "name": "Palak Paneer",
+    "description": "Served with roti or naan, this dish is a delightful way to enjoy greens. It’s a wholesome meal that perfectly reflects the simplicity and richness of rural Indian life.",
+    "price": "65.00",
+    "image": "food_images/B6.jpg",
+    "created_at": "2026-03-16T05:04:52.416Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 7,
+  "fields": {
+    "name": "Aloo Gobhi",
+    "description": "Aloo Gobi, a simple yet delightful dish, is a staple of Indian food. Potatoes and cauliflower are cooked with turmeric and spices to a tender finish.",
+    "price": "35.00",
+    "image": "food_images/B7.jpg",
+    "created_at": "2026-03-16T05:12:20.971Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 8,
+  "fields": {
+    "name": "Gulab Jamun",
+    "description": "Garnished with pistachios, gulab jamuns are perfect for celebrations. These sweet treats are a delightful end to any meal, offering a taste of festive Indian flavors.",
+    "price": "200.00",
+    "image": "food_images/B8.jpg",
+    "created_at": "2026-03-16T05:14:02.010Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 9,
+  "fields": {
+    "name": "Kheer",
+    "description": "Kheer, a rice pudding, was a comforting treat I learned in a Rajasthani home. This creamy dessert is cooked slowly with milk, sugar, and fragrant spices.",
+    "price": "25.00",
+    "image": "food_images/b9.jpg",
+    "created_at": "2026-03-16T05:17:30.338Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 10,
+  "fields": {
+    "name": "Litti Chokha",
+    "description": "Food is made under desi Ghee",
+    "price": "75.00",
+    "image": "food_images/litti_.....gif",
+    "created_at": "2026-03-25T17:32:49.020Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 11,
+  "fields": {
+    "name": "Traditional kachori Aalu Sabji",
+    "description": "Delicious and mades by traditional way\r\n8Nos Kachori",
+    "price": "85.00",
+    "image": "food_images/traditional-bengali-cuisine-dish-puri-aloo-subji-served-white-plate-253418712.webp",
+    "created_at": "2026-03-25T17:35:44.043Z"
+  }
+},
+{
+  "model": "food.food",
+  "pk": 12,
+  "fields": {
+    "name": "Traditional paratha with egg curry",
+    "description": "Paratha Nos 4 \r\n",
+    "price": "105.00",
+    "image": "food_images/india-food-paratha-1120x732.jpg",
+    "created_at": "2026-03-25T17:42:31.345Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "food": 1,
+    "quantity": 10,
+    "total_price": "11990.00",
+    "status": "Delivered",
+    "order_date": "2026-03-15T18:02:58.906Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 2,
+  "fields": {
+    "user": 1,
+    "food": 1,
+    "quantity": 10,
+    "total_price": "11990.00",
+    "status": "Delivered",
+    "order_date": "2026-03-15T18:09:03.060Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 3,
+  "fields": {
+    "user": 1,
+    "food": 2,
+    "quantity": 2,
+    "total_price": "2998.00",
+    "status": "Delivered",
+    "order_date": "2026-03-15T18:46:24.835Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 4,
+  "fields": {
+    "user": 5,
+    "food": 1,
+    "quantity": 1,
+    "total_price": "1199.00",
+    "status": "Accepted",
+    "order_date": "2026-03-16T05:10:46.133Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 5,
+  "fields": {
+    "user": 3,
+    "food": 3,
+    "quantity": 3,
+    "total_price": "450.00",
+    "status": "Accepted",
+    "order_date": "2026-03-16T05:29:01.435Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 6,
+  "fields": {
+    "user": 5,
+    "food": 1,
+    "quantity": 1,
+    "total_price": "1199.00",
+    "status": "Accepted",
+    "order_date": "2026-03-16T05:48:27.666Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 7,
+  "fields": {
+    "user": 7,
+    "food": 2,
+    "quantity": 2,
+    "total_price": "2998.00",
+    "status": "Delivered",
+    "order_date": "2026-03-16T06:33:36.765Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 8,
+  "fields": {
+    "user": 8,
+    "food": 1,
+    "quantity": 1,
+    "total_price": "1199.00",
+    "status": "Delivered",
+    "order_date": "2026-03-16T07:38:39.569Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 9,
+  "fields": {
+    "user": 8,
+    "food": 9,
+    "quantity": 2,
+    "total_price": "50.00",
+    "status": "Accepted",
+    "order_date": "2026-03-16T15:44:57.020Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 10,
+  "fields": {
+    "user": 8,
+    "food": 9,
+    "quantity": 2,
+    "total_price": "50.00",
+    "status": "Pending",
+    "order_date": "2026-03-18T18:53:34.492Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 11,
+  "fields": {
+    "user": 9,
+    "food": 10,
+    "quantity": 2,
+    "total_price": "150.00",
+    "status": "Pending",
+    "order_date": "2026-03-25T17:49:16.588Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 12,
+  "fields": {
+    "user": 9,
+    "food": 8,
+    "quantity": 2,
+    "total_price": "400.00",
+    "status": "Pending",
+    "order_date": "2026-03-25T18:02:24.834Z"
+  }
+},
+{
+  "model": "food.order",
+  "pk": 13,
+  "fields": {
+    "user": 9,
+    "food": 1,
+    "quantity": 1,
+    "total_price": "1199.00",
+    "status": "Pending",
+    "order_date": "2026-05-06T09:05:09.459Z"
+  }
+},
+{
+  "model": "food.review",
+  "pk": 1,
+  "fields": {
+    "user": 1,
+    "food": 2,
+    "rating": 10,
+    "comment": "Amazing Food",
+    "created_at": "2026-03-15T18:45:57.528Z"
+  }
+},
+{
+  "model": "food.review",
+  "pk": 2,
+  "fields": {
+    "user": 3,
+    "food": 1,
+    "rating": 5,
+    "comment": "Amazing",
+    "created_at": "2026-03-16T05:28:27.230Z"
+  }
+}
+]
