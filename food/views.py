@@ -1,14 +1,31 @@
+from django.db.models import Avg, Count
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from .models import User, Food, Order, Review
 
 
 # HOME PAGE
 def home(request):
 
-    foods = Food.objects.all()
+    popular_foods = Food.objects.annotate(
+        avg_rating=Avg('review__rating'),
+        order_count=Count('order'),
+    ).order_by('-order_count', '-avg_rating')[:6]
 
-    return render(request,'food/home.html',{
-        'foods':foods
+    testimonials = Review.objects.select_related('user', 'food').order_by('-created_at')[:3]
+
+    current_user = None
+    if 'user_id' in request.session:
+        current_user = User.objects.filter(id=request.session['user_id']).first()
+
+    return render(request, 'food/home.html', {
+        'popular_foods': popular_foods,
+        'testimonials': testimonials,
+        'current_user': current_user,
+        'chef_count': User.objects.filter(is_staff=False).count(),
+        'food_count': Food.objects.count(),
+        'order_count': Order.objects.filter(status='Delivered').count(),
+        'happy_customers': Order.objects.values('user').distinct().count(),
     })
 
 
@@ -31,7 +48,7 @@ def register(request):
 
         user.save()
 
-        return redirect('login')
+        return redirect(f'{reverse("login")}?registered=1')
 
     return render(request,'food/register.html')
 
@@ -39,10 +56,17 @@ def register(request):
 # LOGIN
 def login_user(request):
 
+    if 'user_id' in request.session:
+        user = User.objects.filter(id=request.session['user_id']).first()
+        if user:
+            if user.is_staff:
+                return redirect('admin_dashboard')
+            return redirect('dashboard')
+
     if request.method == "POST":
 
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
 
         user = User.objects.filter(email=email, password=password).first()
 
@@ -50,28 +74,39 @@ def login_user(request):
 
             request.session['user_id'] = user.id
 
-            # STAFF USER
             if user.is_staff:
                 return redirect('admin_dashboard')
 
-            # NORMAL USER
-            else:
-                return redirect('dashboard')
+            return redirect('dashboard')
 
-        else:
-            return render(request,'food/login.html',{
-                'error':'Invalid Email or Password'
-            })
+        return render(request, 'food/login.html', {
+            'error': 'Invalid email or password. Please try again.',
+            'email': email,
+        })
 
-    return render(request,'food/login.html')
+    return render(request, 'food/login.html', {
+        'success': request.GET.get('registered'),
+    })
 
 
 # LOGOUT
 def logout_user(request):
 
-    request.session.flush()
+    if 'user_id' not in request.session:
+        return redirect('login')
 
-    return redirect('login')
+    user = User.objects.filter(id=request.session['user_id']).first()
+
+    if request.method == "POST":
+        request.session.flush()
+        return render(request, 'food/logout.html', {
+            'logged_out': True,
+        })
+
+    return render(request, 'food/logout.html', {
+        'logged_out': False,
+        'user': user,
+    })
 
 
 # USER DASHBOARD
