@@ -1,0 +1,51 @@
+{% extends 'food/auth_base.html' %}
+
+{% block title %}Logout | HomeBites{% endblock %}
+
+{% block panel_content %}
+{% if logged_out %}
+<h1>You are logged out</h1>
+<p>Thanks for visiting HomeBites. We hope to serve you delicious homemade food again soon.</p>
+{% else %}
+<h1>See you soon!</h1>
+<p>You are about to sign out of your HomeBites account on this device.</p>
+{% endif %}
+<div class="auth-features">
+  <div class="auth-feature">✓ Your session will end securely</div>
+  <div class="auth-feature">✓ You can sign in again anytime</div>
+</div>
+{% endblock %}
+
+{% block form_content %}
+{% if logged_out %}
+<div class="logout-icon">✓</div>
+<h2>Logged out successfully</h2>
+<p class="auth-subtitle">You have been signed out of your account.</p>
+
+<div class="auth-actions">
+  <a href="{% url 'login' %}" class="btn btn-primary">Sign In Again</a>
+  <a href="{% url 'home' %}" class="btn btn-outline">Go to Homepage</a>
+</div>
+{% else %}
+<h2>Confirm logout</h2>
+<p class="auth-subtitle">
+  {% if user %}
+  Signed in as <strong>{{ user.name }}</strong>. Are you sure you want to log out?
+  {% else %}
+  Are you sure you want to log out?
+  {% endif %}
+</p>
+
+<form method="POST" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <div class="auth-actions">
+    <button type="submit" class="btn btn-danger">Yes, Log Out</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancel</a>
+  </div>
+</form>
+
+<div class="auth-footer">
+  <a href="{% url 'home' %}">Back to Home</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+databases:
+  - name: home-bites-db
+    plan: free
+
+services:
+  - type: web
+    name: home-bites
+    runtime: python
+    plan: free
+    buildCommand: ./build.sh
+    startCommand: gunicorn hmfd_project.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: home-bites-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: SITE_URL
+        sync: false
+      - key: CSRF_TRUSTED_ORIGINS
+        sync: false
+      - key: STRIPE_PUBLIC_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false

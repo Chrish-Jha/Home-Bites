@@ -1,80 +1,51 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Register</title>
+{% extends 'food/auth_base.html' %}
 
-<style>
+{% block title %}Register | HomeBites{% endblock %}
 
-body{
-font-family:Arial;
-background:#f2f2f2;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+{% block panel_content %}
+<h1>Join HomeBites</h1>
+<p>Create your account to order homemade food or start your journey as a home chef.</p>
+<div class="auth-features">
+  <div class="auth-feature">✓ Quick and easy registration</div>
+  <div class="auth-feature">✓ Support women entrepreneurs</div>
+  <div class="auth-feature">✓ Access your dashboard instantly</div>
+</div>
+{% endblock %}
 
-.form-box{
-background:white;
-padding:30px;
-width:350px;
-border-radius:10px;
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-}
+{% block form_content %}
+<h2>Create Account</h2>
+<p class="auth-subtitle">Fill in your details to get started.</p>
 
-h2{
-text-align:center;
-margin-bottom:20px;
-}
+<form method="POST" action="{% url 'register' %}">
+  {% csrf_token %}
 
-input{
-width:100%;
-padding:10px;
-margin-bottom:15px;
-border:1px solid #ddd;
-border-radius:6px;
-}
+  <div class="form-group">
+    <label for="name">Full name</label>
+    <input type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name">
+  </div>
 
-button{
-width:100%;
-padding:10px;
-background:#00aa66;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
+  <div class="form-group">
+    <label for="mobile">Mobile number</label>
+    <input type="text" id="mobile" name="mobile" placeholder="10-digit mobile number" required autocomplete="tel">
+  </div>
 
-button:hover{
-background:#008f55;
-}
+  <div class="form-group">
+    <label for="email">Email address</label>
+    <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+  </div>
 
-</style>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Create a password" required autocomplete="new-password">
+  </div>
 
-</head>
-
-<body>
-
-<div class="form-box">
-
-<h2>Register</h2>
-
-<form method="POST">
-{% csrf_token %}
-
-<input type="text" name="name" placeholder="Full Name" required>
-
-<input type="text" name="mobile" placeholder="Mobile Number" required>
-
-<input type="email" name="email" placeholder="Email" required>
-
-<input type="password" name="password" placeholder="Password" required>
-
-<button type="submit">Register</button>
-
+  <button type="submit" class="btn btn-primary">Create Account</button>
 </form>
 
+<div class="auth-footer">
+  Already have an account?
+  <a href="{% url 'login' %}">Sign in</a>
+  &nbsp;·&nbsp;
+  <a href="{% url 'home' %}">Back to Home</a>
 </div>
-
-</body>
-</html>
+{% endblock %}

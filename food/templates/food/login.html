@@ -1,67 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Login</title>
+{% extends 'food/auth_base.html' %}
 
-<style>
+{% block title %}Login | HomeBites{% endblock %}
 
-body{
-font-family:Arial;
-background:#f2f2f2;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+{% block panel_content %}
+<h1>Welcome back!</h1>
+<p>Sign in to order homemade meals, track your orders, and support women home chefs.</p>
+<div class="auth-features">
+  <div class="auth-feature">✓ Browse fresh homemade dishes</div>
+  <div class="auth-feature">✓ Secure online payments</div>
+  <div class="auth-feature">✓ Track orders in real time</div>
+</div>
+{% endblock %}
 
-.form-box{
-background:white;
-padding:30px;
-width:350px;
-border-radius:10px;
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-}
-
-input{
-width:100%;
-padding:10px;
-margin-bottom:15px;
-border:1px solid #ddd;
-border-radius:6px;
-}
-
-button{
-width:100%;
-padding:10px;
-background:#0077ff;
-border:none;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="form-box">
-
+{% block form_content %}
 <h2>Login</h2>
+<p class="auth-subtitle">Enter your account details to continue.</p>
 
-<form method="POST">
-{% csrf_token %}
+{% if success %}
+<div class="alert alert-success">
+  Account created successfully. Please log in with your credentials.
+</div>
+{% endif %}
 
-<input type="email" name="email" placeholder="Email">
+{% if error %}
+<div class="alert alert-error">{{ error }}</div>
+{% endif %}
 
-<input type="password" name="password" placeholder="Password">
+<form method="POST" action="{% url 'login' %}">
+  {% csrf_token %}
 
-<button type="submit">Login</button>
+  <div class="form-group">
+    <label for="email">Email address</label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="you@example.com"
+      value="{{ email|default:'' }}"
+      required
+      autocomplete="email"
+    >
+  </div>
 
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      type="password"
+      id="password"
+      name="password"
+      placeholder="Enter your password"
+      required
+      autocomplete="current-password"
+    >
+  </div>
+
+  <button type="submit" class="btn btn-primary">Sign In</button>
 </form>
 
+<div class="auth-footer">
+  Don't have an account?
+  <a href="{% url 'register' %}">Create one</a>
+  &nbsp;·&nbsp;
+  <a href="{% url 'home' %}">Back to Home</a>
 </div>
-
-</body>
-</html>
+{% endblock %}

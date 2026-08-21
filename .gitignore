@@ -22,7 +22,11 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 staticfiles/
-media/
+media/*
+!media/food_images/
+!media/food_images/**
+!media/Logo/
+!media/Logo/**
 
 # IDE / editor
 .vscode/

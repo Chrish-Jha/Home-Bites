@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}HomeBites{% endblock %}</title>
+<link rel="icon" href="/media/Logo/Logo_Circular.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #00aa66;
+  --primary-dark: #008f55;
+  --accent: #00ff9c;
+  --blue: #0099ff;
+  --dark: #111;
+  --text: #333;
+  --muted: #666;
+  --border: #dde4ea;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --white: #fff;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  min-height: 100vh;
+  color: var(--text);
+  background: #f3f6f9;
+}
+
+h1, h2, h3 {
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+.auth-panel {
+  position: relative;
+  padding: 48px;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.auth-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(0, 170, 102, 0.94), rgba(0, 153, 255, 0.9)),
+    url('/media/food_images/B1.jpeg') center/cover no-repeat;
+  z-index: 0;
+}
+
+.auth-panel-content {
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--white);
+  text-decoration: none;
+  margin-bottom: 36px;
+}
+
+.brand-link img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+.brand-link span {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.auth-panel h1 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.auth-panel p {
+  font-size: 1.02rem;
+  opacity: 0.95;
+  line-height: 1.7;
+}
+
+.auth-features {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+}
+
+.auth-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(4px);
+  font-size: 0.95rem;
+}
+
+.auth-form-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--white);
+  border-radius: 18px;
+  padding: 36px 32px;
+  box-shadow: var(--shadow);
+}
+
+.auth-card h2 {
+  font-size: 1.7rem;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle {
+  color: var(--muted);
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.alert {
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.alert-error {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: var(--success);
+  border: 1px solid #bbf7d0;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 170, 102, 0.15);
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: var(--white);
+}
+
+.btn-danger:hover {
+  background: #b91c1c;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  background: #f8fafc;
+}
+
+.auth-footer {
+  margin-top: 22px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.auth-actions {
+  display: grid;
+  gap: 12px;
+}
+
+.logout-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  background: rgba(0, 170, 102, 0.12);
+  color: var(--primary);
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@media (max-width: 900px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-panel {
+    min-height: 240px;
+    padding: 32px 24px;
+  }
+
+  .auth-features {
+    display: none;
+  }
+}
+</style>
+{% block extra_styles %}{% endblock %}
+</head>
+<body>
+  <div class="auth-page">
+    <aside class="auth-panel">
+      <div class="auth-panel-content">
+        <a href="{% url 'home' %}" class="brand-link">
+          <img src="/media/Logo/Logo_Circular.jpeg" alt="HomeBites logo">
+          <span>HomeBites</span>
+        </a>
+        {% block panel_content %}{% endblock %}
+      </div>
+    </aside>
+
+    <main class="auth-form-wrap">
+      <div class="auth-card">
+        {% block form_content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</body>
+</html>
