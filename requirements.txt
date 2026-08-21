@@ -6,3 +6,6 @@ stripe>=8.0,<13.0
 
 # Image uploads (required for Food.image ImageField)
 Pillow>=10.0,<12.0
+
+# Environment variables
+python-dotenv>=1.0,<2.0
