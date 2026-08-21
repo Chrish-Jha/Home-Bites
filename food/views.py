@@ -367,9 +367,9 @@ def create_checkout_session(request, order_id):
 
         mode='payment',
 
-        success_url='http://127.0.0.1:8000/payment-success/' + str(order.id),
+        success_url=f'{settings.SITE_URL}/payment-success/{order.id}/',
 
-        cancel_url='http://127.0.0.1:8000/payment-cancel/',
+        cancel_url=f'{settings.SITE_URL}/payment-cancel/',
 
     )
 
