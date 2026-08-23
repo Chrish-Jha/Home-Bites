@@ -556,6 +556,12 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 def create_checkout_session(request, order_id):
 
+    if not settings.STRIPE_SECRET_KEY:
+        return render(request, 'food/payment_cancel.html', {
+            'user': require_session_user(request),
+            'active_nav': 'orders',
+        })
+
     order = Order.objects.get(id=order_id)
 
     session = stripe.checkout.Session.create(
