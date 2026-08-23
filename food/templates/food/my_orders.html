@@ -1,317 +1,110 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'food/user_base.html' %}
 
-<title>My Orders</title>
+{% block title %}My Orders | HomeBites{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+{% block extra_styles %}
 <style>
-
-body{
-font-family:Arial;
-background:#f5f7fa;
+.toolbar {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
 }
-
-/* Container */
-
-.container{
-max-width:1100px;
-margin:auto;
-padding:30px;
+.toolbar input, .toolbar select {
+  padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 0.92rem;
 }
-
-/* Top Buttons */
-
-.top-buttons{
-margin-bottom:20px;
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%; border-collapse: collapse; background: var(--white);
+  border-radius: 12px; overflow: hidden;
 }
-
-.btn{
-display:inline-block;
-padding:10px 16px;
-background:#111;
-color:white;
-text-decoration:none;
-border-radius:6px;
-margin-right:10px;
-}
-
-.btn:hover{
-background:#00aa66;
-}
-
-/* Header */
-
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
-
-/* Search */
-
-.search input{
-padding:10px;
-width:220px;
-border:1px solid #ddd;
-border-radius:6px;
-}
-
-/* Filter */
-
-.filter select{
-padding:10px;
-border-radius:6px;
-border:1px solid #ddd;
-}
-
-/* Stats */
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-margin-bottom:25px;
-}
-
-.stat{
-background:white;
-padding:15px;
-border-radius:10px;
-box-shadow:0 3px 8px rgba(0,0,0,0.1);
-text-align:center;
-}
-
-.stat h3{
-color:#00aa66;
-margin-top:5px;
-}
-
-/* Table */
-
-table{
-width:100%;
-border-collapse:collapse;
-background:white;
-border-radius:10px;
-overflow:hidden;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
-
-th,td{
-padding:14px;
-border-bottom:1px solid #eee;
-text-align:left;
-}
-
-th{
-background:#111;
-color:white;
-}
-
-tr:hover{
-background:#f1f1f1;
-}
-
-/* Status */
-
-.status{
-padding:4px 10px;
-border-radius:5px;
-font-size:13px;
-color:white;
-}
-
-.pending{
-background:#ff9800;
-}
-
-.accepted{
-background:#2196f3;
-}
-
-.delivered{
-background:#4caf50;
-}
-
-/* Empty */
-
-.no-orders{
-text-align:center;
-padding:40px;
-color:#666;
-}
-
+th, td { padding: 14px 12px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.92rem; }
+th { background: #111; color: var(--white); font-weight: 600; }
+tr:hover td { background: #f9fafb; }
+.amount { font-weight: 700; color: var(--primary); }
 </style>
+{% endblock %}
 
-</head>
-
-<body>
-
-<div class="container">
-
-<!-- Top Navigation Buttons -->
-
-<div class="top-buttons">
-
-<a href="/dashboard/" class="btn">⬅ Back to Dashboard</a>
-
-<a href="/" class="btn">🏠 Home</a>
-
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>My Orders</h1>
+    <p>Track all your orders, payment status, and delivery updates in one place.</p>
+  </div>
 </div>
 
+<section class="stats">
+  <div class="stat-card"><p>Total Orders</p><h3>{{ orders|length }}</h3></div>
+  <div class="stat-card"><p>Pending</p><h3>{{ pending_orders }}</h3></div>
+  <div class="stat-card"><p>Accepted</p><h3>{{ accepted_orders }}</h3></div>
+  <div class="stat-card"><p>Delivered</p><h3>{{ delivered_orders }}</h3></div>
+  <div class="stat-card"><p>Total Spent</p><h3>₹ {{ total_spent }}</h3></div>
+</section>
 
-<!-- Order Summary -->
+<div class="panel">
+  <div class="toolbar">
+    <input type="text" id="searchOrder" placeholder="Search by food name...">
+    <select id="statusFilter">
+      <option value="">All Status</option>
+      <option value="Pending">Pending</option>
+      <option value="Accepted">Accepted</option>
+      <option value="Delivered">Delivered</option>
+    </select>
+  </div>
 
-<div class="stats">
-
-<div class="stat">
-<p>Total Orders</p>
-<h3>{{ orders|length }}</h3>
+  <div class="table-wrap">
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Food</th>
+          <th>Quantity</th>
+          <th>Total</th>
+          <th>Delivery Address</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.food.name }}</td>
+          <td>{{ order.quantity }}</td>
+          <td class="amount">₹ {{ order.total_price }}</td>
+          <td>{{ order.delivery_address|default:"—" }}</td>
+          <td><span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span></td>
+          <td>{{ order.order_date|date:"d M Y, h:i A" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">
+            <div class="empty-box">No orders yet. <a href="{% url 'food_list' %}">Browse menu</a> to place your first order.</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
+{% endblock %}
 
-<div class="stat">
-<p>Pending</p>
-<h3>
-{{ orders|dictsort:"status"|length }}
-</h3>
-</div>
-
-<div class="stat">
-<p>Delivered</p>
-<h3>
-{{ orders|dictsort:"status"|length }}
-</h3>
-</div>
-
-</div>
-
-
-<!-- Header -->
-
-<div class="header">
-
-<h2>My Orders</h2>
-
-<div class="search">
-<input type="text" id="searchOrder" placeholder="Search food...">
-</div>
-
-<div class="filter">
-<select id="statusFilter">
-<option value="">All</option>
-<option value="Pending">Pending</option>
-<option value="Accepted">Accepted</option>
-<option value="Delivered">Delivered</option>
-</select>
-</div>
-
-</div>
-
-
-<table id="ordersTable">
-
-<tr>
-<th>Food</th>
-<th>Quantity</th>
-<th>Total Price</th>
-<th>Status</th>
-<th>Date</th>
-</tr>
-
-{% for order in orders %}
-
-<tr>
-
-<td>{{ order.food.name }}</td>
-
-<td>{{ order.quantity }}</td>
-
-<td>₹ {{ order.total_price }}</td>
-
-<td>
-
-<span class="status
-{% if order.status == 'Pending' %}pending{% endif %}
-{% if order.status == 'Accepted' %}accepted{% endif %}
-{% if order.status == 'Delivered' %}delivered{% endif %}
-">
-
-{{ order.status }}
-
-</span>
-
-</td>
-
-<td>{{ order.order_date|date:"d M Y" }}</td>
-
-</tr>
-
-{% empty %}
-
-<tr>
-<td colspan="5" class="no-orders">
-No Orders Yet
-</td>
-</tr>
-
-{% endfor %}
-
-</table>
-
-</div>
-
-
+{% block extra_scripts %}
 <script>
+const searchInput = document.getElementById('searchOrder');
+const statusFilter = document.getElementById('statusFilter');
+const rows = document.querySelectorAll('#ordersTable tbody tr');
 
-/* Search */
-
-document.getElementById("searchOrder").addEventListener("keyup",function(){
-
-let value=this.value.toLowerCase()
-
-let rows=document.querySelectorAll("#ordersTable tr")
-
-rows.forEach((row,i)=>{
-
-if(i===0) return
-
-let food=row.children[0].innerText.toLowerCase()
-
-row.style.display=food.includes(value) ? "" : "none"
-
-})
-
-})
-
-/* Filter */
-
-document.getElementById("statusFilter").addEventListener("change",function(){
-
-let value=this.value
-
-let rows=document.querySelectorAll("#ordersTable tr")
-
-rows.forEach((row,i)=>{
-
-if(i===0) return
-
-let status=row.children[3].innerText.trim()
-
-if(value==="" || status===value){
-row.style.display=""
-}else{
-row.style.display="none"
+function filterRows() {
+  const search = searchInput.value.toLowerCase();
+  const status = statusFilter.value;
+  rows.forEach((row) => {
+    if (!row.children[0]) return;
+    const food = row.children[0].innerText.toLowerCase();
+    const rowStatus = row.children[4].innerText.trim();
+    const matchSearch = food.includes(search);
+    const matchStatus = !status || rowStatus === status;
+    row.style.display = matchSearch && matchStatus ? '' : 'none';
+  });
 }
 
-})
-
-})
-
+searchInput.addEventListener('keyup', filterRows);
+statusFilter.addEventListener('change', filterRows);
 </script>
-
-</body>
-</html>
+{% endblock %}

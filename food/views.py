@@ -1,7 +1,8 @@
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import User, Food, Order, Review
+from .models import User, Food, Order, Review, Address
+from .utils import require_session_user
 
 
 # HOME PAGE
@@ -32,25 +33,52 @@ def home(request):
 # REGISTER
 def register(request):
 
+    if 'user_id' in request.session:
+        return redirect('dashboard')
+
     if request.method == "POST":
 
-        name = request.POST.get('name')
-        mobile = request.POST.get('mobile')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        name = request.POST.get('name', '').strip()
+        mobile = request.POST.get('mobile', '').strip()
+        email = request.POST.get('email', '').strip().lower()
+        password = request.POST.get('password', '')
 
-        user = User(
+        errors = []
+
+        if not name:
+            errors.append('Full name is required.')
+        if not mobile:
+            errors.append('Mobile number is required.')
+        elif not mobile.isdigit() or len(mobile) < 10:
+            errors.append('Enter a valid 10-digit mobile number.')
+        if not email:
+            errors.append('Email address is required.')
+        if not password:
+            errors.append('Password is required.')
+        elif len(password) < 6:
+            errors.append('Password must be at least 6 characters.')
+
+        if email and User.objects.filter(email=email).exists():
+            errors.append('An account with this email already exists. Please log in.')
+
+        if errors:
+            return render(request, 'food/register.html', {
+                'errors': errors,
+                'name': name,
+                'mobile': mobile,
+                'email': email,
+            })
+
+        User.objects.create(
             name=name,
             mobile_number=mobile,
             email=email,
-            password=password
+            password=password,
         )
-
-        user.save()
 
         return redirect(f'{reverse("login")}?registered=1')
 
-    return render(request,'food/register.html')
+    return render(request, 'food/register.html')
 
 
 # LOGIN
@@ -112,101 +140,244 @@ def logout_user(request):
 # USER DASHBOARD
 def dashboard(request):
 
-    if 'user_id' not in request.session:
+    user = require_session_user(request)
+    if not user:
         return redirect('login')
 
-    user = User.objects.get(id=request.session['user_id'])
-
-    foods = Food.objects.all()
-
     orders = Order.objects.filter(user=user)
-
     reviews = Review.objects.filter(user=user)
 
-    return render(request,'food/dashboard.html',{
-        'foods':foods,
-        'orders':orders,
-        'reviews':reviews
+    foods = Food.objects.annotate(
+        avg_rating=Avg('review__rating'),
+    ).order_by('-created_at')[:6]
+
+    recent_orders = orders.select_related('food').order_by('-order_date')[:5]
+
+    return render(request, 'food/dashboard.html', {
+        'user': user,
+        'active_nav': 'dashboard',
+        'foods': foods,
+        'orders': orders,
+        'reviews': reviews,
+        'recent_orders': recent_orders,
+        'pending_orders': orders.filter(status='Pending').count(),
+        'delivered_orders': orders.filter(status='Delivered').count(),
+        'total_spent': orders.aggregate(total=Sum('total_price'))['total'] or 0,
     })
 
 
 # FOOD LIST
 def food_list(request):
 
-    foods = Food.objects.all()
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
 
-    return render(request,'food/food_list.html',{
-        'foods':foods
+    foods = Food.objects.annotate(
+        avg_rating=Avg('review__rating'),
+    ).order_by('name')
+
+    return render(request, 'food/food_list.html', {
+        'user': user,
+        'active_nav': 'menu',
+        'foods': foods,
     })
 
 
 # FOOD DETAIL
-def food_detail(request,id):
+def food_detail(request, id):
 
-    food = get_object_or_404(Food,id=id)
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
 
-    reviews = Review.objects.filter(food=food)
+    food = get_object_or_404(
+        Food.objects.annotate(avg_rating=Avg('review__rating')),
+        id=id,
+    )
 
-    return render(request,'food/food_detail.html',{
-        'food':food,
-        'reviews':reviews
+    reviews = Review.objects.filter(food=food).select_related('user')
+
+    return render(request, 'food/food_detail.html', {
+        'user': user,
+        'active_nav': 'menu',
+        'food': food,
+        'reviews': reviews,
     })
 
 
 # PLACE ORDER
 def place_order(request, food_id):
 
-    if 'user_id' not in request.session:
+    user = require_session_user(request)
+    if not user:
         return redirect('login')
 
-    user = User.objects.get(id=request.session['user_id'])
-    food = Food.objects.get(id=food_id)
+    food = get_object_or_404(Food, id=food_id)
+    addresses = Address.objects.filter(user=user)
 
     if request.method == "POST":
 
         quantity = int(request.POST.get('quantity'))
-
+        address_id = request.POST.get('address_id')
         total_price = quantity * food.price
+
+        delivery_text = ''
+        if address_id:
+            address = Address.objects.filter(id=address_id, user=user).first()
+            if address:
+                delivery_text = address.formatted()
 
         order = Order.objects.create(
             user=user,
             food=food,
             quantity=quantity,
-            total_price=total_price
+            total_price=total_price,
+            delivery_address=delivery_text,
         )
 
-        # Redirect to payment
         return redirect('pay', order_id=order.id)
 
-    return render(request,'food/place_order.html',{
-        'food':food
+    return render(request, 'food/place_order.html', {
+        'user': user,
+        'active_nav': 'menu',
+        'food': food,
+        'addresses': addresses,
     })
+
+
+# PROFILE
+def profile(request):
+
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
+
+    errors = []
+
+    if request.method == 'POST':
+        action = request.POST.get('action')
+
+        if action == 'photo':
+            photo = request.FILES.get('profile_photo')
+            if photo:
+                user.profile_photo = photo
+                user.save()
+            else:
+                errors.append('Please select a photo to upload.')
+        elif action == 'add_address':
+            label = request.POST.get('label', '').strip() or 'Home'
+            address_line = request.POST.get('address_line', '').strip()
+            city = request.POST.get('city', '').strip()
+            state = request.POST.get('state', '').strip()
+            pincode = request.POST.get('pincode', '').strip()
+            landmark = request.POST.get('landmark', '').strip()
+            is_default = request.POST.get('is_default') == 'on'
+
+            if not address_line:
+                errors.append('Address line is required.')
+            if not city:
+                errors.append('City is required.')
+            if not state:
+                errors.append('State is required.')
+            if not pincode:
+                errors.append('Pincode is required.')
+
+            if not errors:
+                if is_default:
+                    Address.objects.filter(user=user).update(is_default=False)
+
+                Address.objects.create(
+                    user=user,
+                    label=label,
+                    address_line=address_line,
+                    city=city,
+                    state=state,
+                    pincode=pincode,
+                    landmark=landmark,
+                    is_default=is_default or not Address.objects.filter(user=user).exists(),
+                )
+
+        if not errors:
+            return redirect('profile')
+
+    addresses = Address.objects.filter(user=user)
+
+    return render(request, 'food/profile.html', {
+        'user': user,
+        'active_nav': 'profile',
+        'addresses': addresses,
+        'errors': errors,
+    })
+
+
+def delete_address(request, address_id):
+
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
+
+    if request.method != 'POST':
+        return redirect('profile')
+
+    address = get_object_or_404(Address, id=address_id, user=user)
+    was_default = address.is_default
+    address.delete()
+
+    if was_default:
+        next_address = Address.objects.filter(user=user).first()
+        if next_address:
+            next_address.is_default = True
+            next_address.save()
+
+    return redirect('profile')
+
+
+def set_default_address(request, address_id):
+
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
+
+    if request.method != 'POST':
+        return redirect('profile')
+
+    address = get_object_or_404(Address, id=address_id, user=user)
+    Address.objects.filter(user=user).update(is_default=False)
+    address.is_default = True
+    address.save()
+
+    return redirect('profile')
 
 
 # MY ORDERS
 def my_orders(request):
 
-    if 'user_id' not in request.session:
+    user = require_session_user(request)
+    if not user:
         return redirect('login')
 
-    user = User.objects.get(id=request.session['user_id'])
+    orders = Order.objects.filter(user=user).select_related('food').order_by('-order_date')
 
-    orders = Order.objects.filter(user=user).order_by('-order_date')
-
-    return render(request,'food/my_orders.html',{
-        'orders':orders
+    return render(request, 'food/my_orders.html', {
+        'user': user,
+        'active_nav': 'orders',
+        'orders': orders,
+        'pending_orders': orders.filter(status='Pending').count(),
+        'accepted_orders': orders.filter(status='Accepted').count(),
+        'delivered_orders': orders.filter(status='Delivered').count(),
+        'total_spent': orders.aggregate(total=Sum('total_price'))['total'] or 0,
     })
 
 
 # ADD REVIEW
-def add_review(request,food_id):
+def add_review(request, food_id):
 
-    if 'user_id' not in request.session:
+    user = require_session_user(request)
+    if not user:
         return redirect('login')
 
-    user = User.objects.get(id=request.session['user_id'])
-
-    food = Food.objects.get(id=food_id)
+    food = get_object_or_404(Food, id=food_id)
 
     if request.method == "POST":
 
@@ -220,10 +391,12 @@ def add_review(request,food_id):
             comment=comment
         )
 
-        return redirect('food_detail',id=food_id)
+        return redirect('food_detail', id=food_id)
 
-    return render(request,'food/add_review.html',{
-        'food':food
+    return render(request, 'food/add_review.html', {
+        'user': user,
+        'active_nav': 'menu',
+        'food': food,
     })
 
 
@@ -412,15 +585,28 @@ def create_checkout_session(request, order_id):
 
 def payment_success(request, order_id):
 
-    order = Order.objects.get(id=order_id)
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
+
+    order = get_object_or_404(Order, id=order_id, user=user)
 
     order.status = "Accepted"
     order.save()
 
-    return render(request,'food/payment_success.html',{
-        'order':order
+    return render(request, 'food/payment_success.html', {
+        'user': user,
+        'active_nav': 'orders',
+        'order': order,
     })
 
 def payment_cancel(request):
 
-    return render(request,'food/payment_cancel.html')
+    user = require_session_user(request)
+    if not user:
+        return redirect('login')
+
+    return render(request, 'food/payment_cancel.html', {
+        'user': user,
+        'active_nav': 'orders',
+    })

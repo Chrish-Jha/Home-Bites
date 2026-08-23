@@ -20,6 +20,11 @@ urlpatterns = [
     path('order/<int:food_id>/', views.place_order, name='place_order'),
     path('my-orders/', views.my_orders, name='my_orders'),
 
+    # Profile & Addresses
+    path('profile/', views.profile, name='profile'),
+    path('address/delete/<int:address_id>/', views.delete_address, name='delete_address'),
+    path('address/default/<int:address_id>/', views.set_default_address, name='set_default_address'),
+
     # Reviews
     path('review/<int:food_id>/', views.add_review, name='add_review'),
 

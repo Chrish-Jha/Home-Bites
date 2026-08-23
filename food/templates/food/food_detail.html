@@ -1,185 +1,72 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'food/user_base.html' %}
 
-<title>{{ food.name }}</title>
+{% block title %}{{ food.name }} | HomeBites{% endblock %}
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+{% block extra_styles %}
 <style>
-
-body{
-font-family:Arial;
-background:#f5f7fa;
+.detail-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.food-image {
+  width: 100%; height: 340px; object-fit: cover; border-radius: 16px;
+  border: 1px solid var(--border);
 }
-
-.container{
-max-width:900px;
-margin:auto;
-padding:30px;
+.detail-panel h1 { font-size: 1.8rem; margin-bottom: 10px; }
+.detail-panel p { color: var(--muted); margin-bottom: 16px; }
+.price-box {
+  display: inline-block; padding: 10px 16px; border-radius: 10px;
+  background: rgba(0,170,102,0.1); color: var(--primary); font-weight: 700; font-size: 1.2rem;
+  margin-bottom: 18px;
 }
-
-/* Food Card */
-
-.food-card{
-background:white;
-padding:25px;
-border-radius:12px;
-box-shadow:0 4px 12px rgba(0,0,0,0.1);
-margin-bottom:25px;
+.rating-box {
+  display: inline-block; margin-left: 10px; padding: 10px 16px; border-radius: 10px;
+  background: rgba(245,158,11,0.12); color: #d97706; font-weight: 700;
 }
-
-.food-card img{
-width:100%;
-height:300px;
-object-fit:cover;
-border-radius:10px;
-margin-bottom:15px;
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.review-card {
+  padding: 14px; border-radius: 12px; background: #f9fafb;
+  border: 1px solid var(--border); margin-bottom: 12px;
 }
-
-.price{
-color:#00aa66;
-font-size:20px;
-font-weight:bold;
-margin:10px 0;
-}
-
-/* Buttons */
-
-.btn{
-display:inline-block;
-padding:10px 16px;
-background:#00aa66;
-color:white;
-text-decoration:none;
-border-radius:6px;
-margin-right:10px;
-}
-
-.btn:hover{
-background:#008f55;
-}
-
-/* Reviews */
-
-.review-box{
-margin-top:30px;
-}
-
-.review{
-background:white;
-padding:15px;
-margin-bottom:10px;
-border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-
-.user{
-font-weight:bold;
-margin-bottom:5px;
-}
-
-/* Stars */
-
-.stars{
-color:#ffb400;
-font-size:18px;
-margin-bottom:5px;
-}
-
-/* Back button */
-
-.back{
-margin-top:20px;
-}
-
+.review-card h4 { margin-bottom: 4px; }
+.stars { color: #f59e0b; margin-bottom: 6px; }
+@media (max-width: 900px) { .detail-grid { grid-template-columns: 1fr; } .food-image { height: 260px; } }
 </style>
+{% endblock %}
 
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="food-card">
-
-<h1>{{ food.name }}</h1>
-
-<img src="{{ food.image.url }}">
-
-<p>{{ food.description }}</p>
-
-<div class="price">
-₹ {{ food.price }}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>{{ food.name }}</h1>
+    <p>View details, place your order, and read customer reviews.</p>
+  </div>
+  <a href="{% url 'food_list' %}" class="btn btn-secondary">← Back to Menu</a>
 </div>
 
-<a href="/order/{{ food.id }}/" class="btn">
-Order Now
-</a>
+<section class="detail-grid">
+  <div>
+    <img src="{{ food.image.url }}" alt="{{ food.name }}" class="food-image" onerror="this.src='/media/Logo/Logo_Circular.jpeg'">
+  </div>
+  <div class="panel detail-panel">
+    <p>{{ food.description }}</p>
+    <div>
+      <span class="price-box">₹ {{ food.price }}</span>
+      <span class="rating-box">{% if food.avg_rating %}★ {{ food.avg_rating|floatformat:1 }}{% else %}★ New{% endif %}</span>
+    </div>
+    <div class="actions">
+      <a href="{% url 'place_order' food.id %}" class="btn btn-primary">Order Now</a>
+      <a href="{% url 'add_review' food.id %}" class="btn btn-outline">Add Review</a>
+    </div>
+  </div>
+</section>
 
-<a href="/review/{{ food.id }}/" class="btn">
-Add Review
-</a>
-
-</div>
-
-
-<!-- Reviews -->
-
-<div class="review-box">
-
-<h2>Customer Reviews</h2>
-
-{% for review in reviews %}
-
-<div class="review">
-
-<div class="user">
-{{ review.user.name }}
-</div>
-
-<div class="stars">
-
-{% for i in "12345" %}
-
-{% if forloop.counter <= review.rating %}
-
-⭐
-
-{% else %}
-
-☆ 
-
-{% endif %}
-
-{% endfor %}
-
-</div>
-
-<p>{{ review.comment }}</p>
-
-</div>
-
-{% empty %}
-
-<p>No reviews yet.</p>
-
-{% endfor %}
-
-</div>
-
-
-<!-- Back button -->
-
-<div class="back">
-
-<a href="/dashboard/" class="btn">
-⬅ Back to Dashboard
-</a>
-
-</div>
-
-</div>
-
-</body>
-</html>
+<section class="panel">
+  <h2 style="margin-bottom:16px;font-size:1.15rem;">Customer Reviews</h2>
+  {% for review in reviews %}
+  <div class="review-card">
+    <h4>{{ review.user.name }}</h4>
+    <div class="stars">{% for i in "12345" %}{% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+    <p>{{ review.comment }}</p>
+  </div>
+  {% empty %}
+  <div class="empty-box"><p>No reviews yet. Be the first to review this dish.</p></div>
+  {% endfor %}
+</section>
+{% endblock %}

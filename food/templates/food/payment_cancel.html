@@ -1,0 +1,23 @@
+{% extends 'food/user_base.html' %}
+
+{% block title %}Payment Cancelled | HomeBites{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Payment Cancelled</h1>
+    <p>Your payment was not completed. You can try again anytime.</p>
+  </div>
+</div>
+
+<section class="panel" style="max-width:560px;">
+  <div class="empty-box">
+    <h3 style="margin-bottom:8px;">Payment not completed</h3>
+    <p>No charges were made. Return to the menu to place your order again.</p>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+    <a href="{% url 'food_list' %}" class="btn btn-primary">Browse Menu</a>
+    <a href="{% url 'my_orders' %}" class="btn btn-secondary">My Orders</a>
+  </div>
+</section>
+{% endblock %}
