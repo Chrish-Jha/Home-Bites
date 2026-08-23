@@ -130,8 +130,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 SITE_URL = os.getenv('SITE_URL', 'http://127.0.0.1:8000').rstrip('/')
 
-STRIPE_PUBLIC_KEY = require_env('STRIPE_PUBLIC_KEY')
-STRIPE_SECRET_KEY = require_env('STRIPE_SECRET_KEY')
+STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
 
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
