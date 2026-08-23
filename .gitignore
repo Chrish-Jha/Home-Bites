@@ -27,6 +27,8 @@ media/*
 !media/food_images/**
 !media/Logo/
 !media/Logo/**
+!media/profile_photos/
+!media/profile_photos/**
 
 # IDE / editor
 .vscode/

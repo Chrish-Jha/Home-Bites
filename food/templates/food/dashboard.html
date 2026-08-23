@@ -1,302 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'food/user_base.html' %}
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}Dashboard | HomeBites{% endblock %}
 
-<title>Food Dashboard</title>
-
+{% block extra_styles %}
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
+.welcome-banner {
+  background: linear-gradient(120deg, var(--primary), var(--blue));
+  color: var(--white);
+  border-radius: 18px;
+  padding: 28px 30px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-
-body{
-background:#f4f6f9;
+.welcome-banner h1 { font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 8px; }
+.welcome-banner p { opacity: 0.95; max-width: 620px; }
+.welcome-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.welcome-actions a {
+  padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 0.92rem;
 }
-
-/* Navbar */
-
-.navbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:#111;
-color:white;
-padding:15px 40px;
+.btn-light { background: var(--white); color: var(--dark); }
+.btn-outline-light { border: 2px solid rgba(255,255,255,0.85); color: var(--white); }
+.content-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-bottom: 24px; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.panel-header h2 { font-size: 1.1rem; }
+.panel-header a { color: var(--primary); font-weight: 600; font-size: 0.9rem; }
+.order-list { display: grid; gap: 12px; }
+.order-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px; border-radius: 12px; background: #f9fafb; border: 1px solid var(--border);
 }
-
-.logo{
-font-size:22px;
-font-weight:bold;
-color:#00ff9c;
+.order-item h4 { font-size: 0.95rem; margin-bottom: 4px; }
+.order-item p { font-size: 0.85rem; color: var(--muted); }
+.quick-actions { display: grid; gap: 12px; }
+.quick-action {
+  display: flex; align-items: center; gap: 12px; padding: 14px;
+  border-radius: 12px; background: #f9fafb; border: 1px solid var(--border);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-
-.nav-links a{
-margin-left:20px;
-color:white;
-text-decoration:none;
+.quick-action:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+.quick-action span {
+  width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+  background: rgba(0,170,102,0.12); color: var(--primary); font-size: 1.1rem;
 }
-
-.nav-links a:hover{
-color:#00ff9c;
+.section-title { font-size: 1.2rem; margin-bottom: 16px; }
+.food-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+.food-card {
+  background: var(--white); border-radius: 14px; overflow: hidden;
+  box-shadow: var(--shadow); border: 1px solid var(--border);
+  display: flex; flex-direction: column; transition: transform 0.2s;
 }
-
-/* Dashboard layout */
-
-.dashboard{
-display:grid;
-grid-template-columns:250px 1fr;
-min-height:100vh;
+.food-card:hover { transform: translateY(-4px); }
+.food-card img { width: 100%; height: 150px; object-fit: cover; }
+.food-content { padding: 16px; display: flex; flex-direction: column; flex: 1; }
+.food-content h3 { font-size: 1rem; margin-bottom: 6px; min-height: 2.4em; }
+.food-content p { color: var(--muted); font-size: 0.88rem; flex: 1; min-height: 2.6em; }
+.food-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0;
 }
-
-/* Sidebar */
-
-.sidebar{
-background:#1a1a1a;
-color:white;
-padding:25px;
+.price, .rating {
+  text-align: center; padding: 6px 8px; border-radius: 8px;
+  font-size: 0.88rem; font-weight: 700;
 }
-
-.sidebar h2{
-margin-bottom:25px;
+.price { background: rgba(0,170,102,0.1); color: var(--primary); }
+.rating { background: rgba(245,158,11,0.12); color: #d97706; }
+.order-btn {
+  display: block; text-align: center; padding: 10px; background: var(--primary);
+  color: var(--white); border-radius: 8px; font-weight: 600; font-size: 0.9rem;
 }
-
-.sidebar a{
-display:block;
-padding:10px;
-color:white;
-text-decoration:none;
-border-radius:6px;
-margin-bottom:10px;
-}
-
-.sidebar a:hover{
-background:#00aa66;
-}
-
-/* Main */
-
-.main{
-padding:30px;
-}
-
-/* Stats */
-
-.stats{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-margin-bottom:30px;
-}
-
-.stat-box{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 4px 10px rgba(0,0,0,.1);
-}
-
-.stat-box h3{
-font-size:22px;
-color:#00aa66;
-}
-
-/* Food cards */
-
-.food-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-}
-
-.food-card{
-background:white;
-border-radius:10px;
-overflow:hidden;
-box-shadow:0 4px 10px rgba(0,0,0,.1);
-transition:.3s;
-}
-
-.food-card:hover{
-transform:translateY(-5px);
-}
-
-.food-card img{
-width:100%;
-height:160px;
-object-fit:cover;
-}
-
-.food-content{
-padding:15px;
-}
-
-.price{
-color:#00aa66;
-font-weight:bold;
-margin:5px 0;
-}
-
-.order-btn{
-display:inline-block;
-padding:8px 12px;
-background:#00aa66;
-color:white;
-text-decoration:none;
-border-radius:5px;
-font-size:14px;
-}
-
-/* Responsive */
-
-@media(max-width:900px){
-
-.dashboard{
-grid-template-columns:1fr;
-}
-
-.sidebar{
-display:flex;
-overflow:auto;
-}
-
-.sidebar a{
-margin-right:10px;
-}
-
-}
-
+.order-btn:hover { background: var(--primary-dark); }
+@media (max-width: 1024px) { .content-grid { grid-template-columns: 1fr; } }
 </style>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
+<section class="welcome-banner">
+  <div>
+    <h1>Hello, {{ user.name }} 👋</h1>
+    <p>Welcome back to your HomeBites dashboard. Explore homemade dishes, track orders, and enjoy food made with love.</p>
+  </div>
+  <div class="welcome-actions">
+    <a href="{% url 'food_list' %}" class="btn-light">Order Food</a>
+    <a href="{% url 'my_orders' %}" class="btn-outline-light">View Orders</a>
+  </div>
+</section>
 
-<!-- Navbar -->
+<section class="stats">
+  <div class="stat-card"><p>Total Orders</p><h3>{{ orders|length }}</h3></div>
+  <div class="stat-card"><p>Pending</p><h3>{{ pending_orders }}</h3></div>
+  <div class="stat-card"><p>Delivered</p><h3>{{ delivered_orders }}</h3></div>
+  <div class="stat-card"><p>My Reviews</p><h3>{{ reviews|length }}</h3></div>
+  <div class="stat-card"><p>Total Spent</p><h3>₹ {{ total_spent }}</h3></div>
+</section>
 
-<div class="navbar">
+<section class="content-grid">
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Recent Orders</h2>
+      <a href="{% url 'my_orders' %}">View all</a>
+    </div>
+    {% if recent_orders %}
+    <div class="order-list">
+      {% for order in recent_orders %}
+      <div class="order-item">
+        <div>
+          <h4>{{ order.food.name }}</h4>
+          <p>Qty: {{ order.quantity }} · ₹ {{ order.total_price }} · {{ order.order_date|date:"d M Y" }}</p>
+        </div>
+        <span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-box"><p>No orders yet. Start by exploring our menu.</p></div>
+    {% endif %}
+  </div>
 
-<div class="logo">
-HMFD Dashboard
-</div>
+  <div class="panel">
+    <div class="panel-header"><h2>Quick Actions</h2></div>
+    <div class="quick-actions">
+      <a href="{% url 'food_list' %}" class="quick-action">
+        <span>🍲</span>
+        <div><strong>Browse Menu</strong><p style="color:var(--muted);font-size:0.85rem;">Discover homemade dishes</p></div>
+      </a>
+      <a href="{% url 'my_orders' %}" class="quick-action">
+        <span>📦</span>
+        <div><strong>Track Orders</strong><p style="color:var(--muted);font-size:0.85rem;">Check your order status</p></div>
+      </a>
+      <a href="{% url 'home' %}" class="quick-action">
+        <span>🏠</span>
+        <div><strong>Visit Homepage</strong><p style="color:var(--muted);font-size:0.85rem;">Learn more about HomeBites</p></div>
+      </a>
+    </div>
+  </div>
+</section>
 
-<div class="nav-links">
-<a href="/">Home</a>
-<a href="/foods/">Menu</a>
-<a href="/my-orders/">My Orders</a>
-<a href="/logout/">Logout</a>
-</div>
-
-</div>
-
-
-<div class="dashboard">
-
-<!-- Sidebar -->
-
-<div class="sidebar">
-
-<h2>Menu</h2>
-
-<a href="/">🏠 Home</a>
-<a href="/foods/">🍔 Browse Foods</a>
-<a href="/my-orders/">📦 My Orders</a>
-<a href="/logout/">🚪 Logout</a>
-
-</div>
-
-
-<!-- Main -->
-
-<div class="main">
-
-<h1>Welcome to Food Dashboard</h1>
-
-<br>
-
-<!-- Stats -->
-
-<div class="stats">
-
-<div class="stat-box">
-<p>Total Foods</p>
-<h3>{{ foods|length }}</h3>
-</div>
-
-<div class="stat-box">
-<p>My Orders</p>
-<h3>{{ orders|length }}</h3>
-</div>
-
-<div class="stat-box">
-<p>Reviews</p>
-<h3>{{ reviews|length }}</h3>
-</div>
-
-</div>
-
-
-<h2>Available Foods</h2>
-
-<br>
-
-<div class="food-grid">
-
-{% for food in foods %}
-
-<div class="food-card">
-
-<img src="{{ food.image.url }}">
-
-<div class="food-content">
-
-<h3>{{ food.name }}</h3>
-
-<p>{{ food.description|truncatechars:50 }}</p>
-
-<div class="price">
-₹ {{ food.price }}
-</div>
-
-<a href="/food/{{ food.id }}/" class="order-btn">
-View
-</a>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-</div>
-
-<script>
-
-/* simple hover animation */
-
-const cards=document.querySelectorAll(".food-card");
-
-cards.forEach(card=>{
-card.addEventListener("mouseenter",()=>{
-card.style.boxShadow="0 8px 20px rgba(0,0,0,0.2)";
-})
-
-card.addEventListener("mouseleave",()=>{
-card.style.boxShadow="0 4px 10px rgba(0,0,0,0.1)";
-})
-
-})
-
-</script>
-
-</body>
-</html>
+<section>
+  <h2 class="section-title">Recommended For You</h2>
+  {% if foods %}
+  <div class="food-grid">
+    {% for food in foods %}
+    <article class="food-card">
+      <img src="{{ food.image.url }}" alt="{{ food.name }}" loading="lazy" onerror="this.src='/media/Logo/Logo_Circular.jpeg'">
+      <div class="food-content">
+        <h3>{{ food.name }}</h3>
+        <p>{{ food.description|truncatechars:70 }}</p>
+        <div class="food-meta">
+          <span class="price">₹ {{ food.price }}</span>
+          <span class="rating">{% if food.avg_rating %}★ {{ food.avg_rating|floatformat:1 }}{% else %}★ New{% endif %}</span>
+        </div>
+        <a href="{% url 'food_detail' food.id %}" class="order-btn">View Details</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-box"><p>No food items available right now.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

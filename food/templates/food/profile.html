@@ -1,0 +1,212 @@
+{% extends 'food/user_base.html' %}
+
+{% block title %}My Profile | HomeBites{% endblock %}
+
+{% block extra_styles %}
+<style>
+.profile-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+.photo-card {
+  text-align: center;
+}
+.profile-photo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary);
+  margin: 0 auto 16px;
+}
+.detail-list {
+  display: grid;
+  gap: 12px;
+}
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.detail-item span:first-child {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.detail-item strong {
+  text-align: right;
+  word-break: break-word;
+}
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.address-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  background: #f9fafb;
+}
+.address-card.default {
+  border-color: var(--primary);
+  background: rgba(0, 170, 102, 0.06);
+}
+.address-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.address-actions form { display: inline; }
+.btn-small {
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+.btn-set { background: #dbeafe; color: #1d4ed8; }
+.btn-delete { background: #fee2e2; color: #b91c1c; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 16px;
+}
+.alert-error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+@media (max-width: 900px) {
+  .profile-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>My Profile</h1>
+    <p>Manage your photo, account details, and saved delivery addresses.</p>
+  </div>
+</div>
+
+{% if errors %}
+<div class="alert-error">
+  {% for error in errors %}<div>{{ error }}</div>{% endfor %}
+</div>
+{% endif %}
+
+<section class="profile-grid">
+  <div class="panel photo-card">
+    <img src="{{ user.profile_photo_url }}" alt="{{ user.name }}" class="profile-photo">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="photo">
+      <div class="form-group">
+        <label for="profile_photo">Update profile photo</label>
+        <input type="file" id="profile_photo" name="profile_photo" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Upload Photo</button>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2 style="margin-bottom:16px;font-size:1.1rem;">Account Details</h2>
+    <div class="detail-list">
+      <div class="detail-item"><span>Full Name</span><strong>{{ user.name }}</strong></div>
+      <div class="detail-item"><span>Email</span><strong>{{ user.email }}</strong></div>
+      <div class="detail-item"><span>Mobile</span><strong>{{ user.mobile_number }}</strong></div>
+      <div class="detail-item"><span>Member Since</span><strong>{{ user.created_at|date:"d M Y" }}</strong></div>
+    </div>
+  </div>
+</section>
+
+<section class="panel" style="margin-bottom:24px;">
+  <h2 style="margin-bottom:16px;font-size:1.1rem;">Saved Delivery Addresses</h2>
+
+  {% if addresses %}
+  <div class="address-grid">
+    {% for address in addresses %}
+    <div class="address-card {% if address.is_default %}default{% endif %}">
+      <strong>{{ address.label }}{% if address.is_default %} · Default{% endif %}</strong>
+      <p style="margin-top:8px;color:var(--muted);font-size:0.92rem;">{{ address.formatted }}</p>
+      <div class="address-actions">
+        {% if not address.is_default %}
+        <form method="POST" action="{% url 'set_default_address' address.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-small btn-set">Set Default</button>
+        </form>
+        {% endif %}
+        <form method="POST" action="{% url 'delete_address' address.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn-small btn-delete">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-box" style="margin-bottom:16px;">No saved addresses yet. Add your first delivery address below.</div>
+  {% endif %}
+</section>
+
+<section class="panel">
+  <h2 style="margin-bottom:16px;font-size:1.1rem;">Add New Address</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="add_address">
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="label">Label</label>
+        <input type="text" id="label" name="label" placeholder="Home / Office" value="Home">
+      </div>
+      <div class="form-group">
+        <label for="pincode">Pincode</label>
+        <input type="text" id="pincode" name="pincode" placeholder="Pincode" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="address_line">Address</label>
+      <input type="text" id="address_line" name="address_line" placeholder="House no, street, area" required>
+    </div>
+    <div class="form-group">
+      <label for="landmark">Landmark (optional)</label>
+      <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark">
+    </div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" placeholder="City" required>
+      </div>
+      <div class="form-group">
+        <label for="state">State</label>
+        <input type="text" id="state" name="state" placeholder="State" required>
+      </div>
+    </div>
+    <label class="checkbox-row">
+      <input type="checkbox" name="is_default">
+      Set as default delivery address
+    </label>
+    <button type="submit" class="btn btn-primary">Save Address</button>
+  </form>
+</section>
+{% endblock %}
