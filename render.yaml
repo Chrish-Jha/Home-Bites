@@ -1,3 +1,9 @@
+databases:
+  - name: home-bites-db
+    plan: free
+    databaseName: home_bites
+    user: home_bites_user
+
 services:
   - type: web
     name: home-bites
@@ -7,7 +13,9 @@ services:
     startCommand: gunicorn hmfd_project.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: home-bites-db
+          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
