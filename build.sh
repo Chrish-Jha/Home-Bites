@@ -4,6 +4,7 @@ set -o errexit
 pip install -r requirements.txt
 python manage.py collectstatic --noinput
 python manage.py migrate --noinput
+python manage.py setup_admin
 
 # Free tier has no Shell — seed data on first deploy if database is empty
 python manage.py shell -c "
